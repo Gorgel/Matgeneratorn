@@ -1,0 +1,84 @@
+body {
+	  padding-top: 3.5rem;
+	   margin-bottom: 60px;
+	}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+img {
+    display: block;
+}
+
+.food_type_img {
+    position: relative;
+    display: inline-block;
+}
+
+.caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50% );
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
+}
+
+.cover {
+  object-fit: cover;
+  width: 100%;
+  height: 300px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+.glyph-icon {
+    width: 65px;
+}
+
+.bg-nav {
+background-color: #843c60;
+}
+
+.bg-jumbo {
+background-color: #ffbfbf;
+}
+
+.bg-footer {
+background-color: #ffb7d2;
+}
+
+.bg-list {
+background-color: #ffe2e2;
+}
+
+.bg-button {
+background-color: #ff919a;
+}
+
+.jumbo-font {
+font-family: 'Tangerine', cursive;
+font-size: 5rem;
+color: white;
+}
+
+.jumbotron {
+padding: 1rem;
+}
+
+
+
+

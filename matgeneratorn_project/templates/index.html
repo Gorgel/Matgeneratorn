@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+
+    <div class="jumbotron jumbotron-fluid bg-jumbo ">
+      <div class="container">
+              <h1 class="jumbo-font">Marzimon Mat {{ my_car }}</h1>
+          </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+          {% if recipe_types %}
+                {% for recipe_type in recipe_types %}
+                    <div class="col-md-3 p-4">
+                        <a href="/matgeneratorn/show_recipes/{{ recipe_type.slug }}">
+                        <img class="rounded-circle img-fluid food_type_img" src="{{ MEDIA_URL }}{{ recipe_type.picture }}"></img>
+                        <h2 class="text-center caption">{{ recipe_type.name }}</h2>
+                        </a>
+                    </div>
+                {% endfor %}
+          {% endif %}
+      </div>
+    </div> <!-- /container -->
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+
+<div class="container">
+      <div class="row">
+          {% if recipes %}
+                {% for recipe in recipes %}
+                    <div class="col-md-3 p-4">
+                        <a href="/matgeneratorn/recipe/{{ recipe.slug }}">
+                        <img class="rounded-circle img-fluid food_type_img" src="{{ MEDIA_URL }}{{ recipe.picture }}"></img>
+                        </a>
+                        <h5 class="text-center m-3">{{ recipe.name }}</h5>
+                    </div>
+                {% endfor %}
+          {% else %}
+          <div class="col-md-3 p-4">
+          <strong>Sorry, no recipes in this category!</strong>
+          </div>
+          {% endif %}
+      </div>
+    </div> <!-- /container -->
+
+{% endblock %}

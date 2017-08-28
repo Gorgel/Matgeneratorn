@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+
+{% if recipes %}
+{% for recipe in recipes %}
+<figure class="cropped-image">
+    <img class="cover" src="{{ MEDIA_URL }}{{ recipe.picture }}">
+</figure>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">{{ recipe.name }}</h1>
+       Kategori: {{ recipe.food_type }}
+
+      {{ recipe.instructions|safe }}
+        <p>Alternativ: {{ recipe.alternative }}</p>
+    </div>
+    <div class="col-md-auto">
+      <br>
+          <form method="post" action="/matgeneratorn/recipe/{{ recipe.slug }}/">
+              {% csrf_token %}
+
+         <div class="form-group">
+         <label for="exampleFormControlInput1">Välj antal portioner:</label>
+         <select class="form-control" id="id_status" name="status" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            </select>
+         </div>
+        <div class="form-group">
+        <input class="btn bg-button" type="submit" name="submit" value="Updatera" />
+        </div>
+        </form>
+
+    <h3>Ingredienser:</h3>
+        <strong>För {{ portions }} portioner:</strong>
+        <p></p>
+          <ul class="list-group ">
+          {% if ingredients %}
+          {% for ingredient in ingredients %}
+            <li class="list-group-item bg-list">{{ ingredient }}</li>
+          {% endfor %}
+          </ul>
+          {% endif %}
+    </div>
+    <div class="col col-lg-2">
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+{% else %}
+nothing
+{% endif %}
+
+{% endblock %}
