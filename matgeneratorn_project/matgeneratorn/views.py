@@ -426,6 +426,7 @@ def generator(request):
         #save ingredient string list to session
         request.session['ingredient_strings'] = ingredient_strings
 
+        # create lists of manal recepie selction
         dish_type = RecipeType.objects.filter(name=responses[u'Måndag']).first()
         monday_recipes = Recipe.objects.all().filter(food_type=dish_type)
         dish_type = RecipeType.objects.filter(name=responses[u'Tisdag']).first()
@@ -441,6 +442,7 @@ def generator(request):
         dish_type = RecipeType.objects.filter(name=responses[u'Söndag']).first()
         sunday_recipes = Recipe.objects.all().filter(food_type=dish_type)
 
+        # store in context dic and send to template
         context_dict['monday_recipes'] = monday_recipes
         context_dict['tuesday_recipes'] = tuesday_recipes
         context_dict['wednesday_recipes'] = wednesday_recipes
