@@ -62,7 +62,7 @@ background-color: #ffb7d2;
 }
 
 .bg-list {
-background-color: #ffe2e2;
+background-color: #ffefef;
 }
 
 .bg-button {
@@ -73,6 +73,18 @@ background-color: #ff919a;
 font-family: 'Tangerine', cursive;
 font-size: 5rem;
 color: white;
+}
+
+.recipe-font {
+font-family: 'Tangerine', cursive;
+font-size: 4rem;
+color: black;
+}
+
+.show-font {
+font-family: 'Tangerine', cursive;
+font-size: 2.5rem;
+color: black;
 }
 
 .jumbotron {

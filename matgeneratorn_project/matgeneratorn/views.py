@@ -60,13 +60,20 @@ def multiply_portions(day, portion, matlista):
     for ingredient in matlista[day]['ingredients']:
         matlista[day]['ingredients'][ingredient]['quantity'] *= int(portion)
 
-def gen_random_food(day, food_type, matlista):
+def gen_random_food(day, food_type, matlista, fast):
 
     # get the food type object from the form response
     dish_type = RecipeType.objects.filter(name=food_type).first()
 
-    # get a random recipe using food type response
-    random_dish = Recipe.objects.all().filter(food_type=dish_type).order_by('?').first()
+    # check if the fast food checkbutton has been checked
+    # if it has generate a random dish from dishes labeled fast
+    if fast == "True":
+        random_dish = Recipe.objects.all().filter(food_type=dish_type).filter(fast=True).order_by('?').first()
+
+    else:
+        # get a random recipe using food type response
+        random_dish = Recipe.objects.all().filter(food_type=dish_type).order_by('?').first()
+
     # store name of dish in data structure
     matlista[day]['dish'] = random_dish.name
 
@@ -117,6 +124,26 @@ def show_recipes(request, recipe_type_slug):
         context_dict['recipes'] = None
 
     return render(request, 'show_recipes.html', context=context_dict)
+
+def fast_recipes(request):
+
+
+    # create context dictionary
+    context_dict = {}
+
+    try:
+        # get all recipees in this category.
+        recipes = Recipe.objects.all().filter(fast=True)
+
+        # store every recipe in a dictionary
+        context_dict['recipes'] = recipes
+
+    except:
+
+        # if nothing found return nothing
+        context_dict['recipes'] = None
+
+    return render(request, 'fast_recipes.html', context=context_dict)
 
 def recipe(request, recipe_slug):
 
@@ -191,6 +218,8 @@ def generator(request):
     # check if any button has been pushed and a POST object has been created
     if request.method == 'POST':
 
+        print request.POST
+
         # collect all the food types from the select boxes
         responses = {u'Måndag': request.POST['monday'],
                      u'Tisdag': request.POST['tuesday'],
@@ -202,12 +231,20 @@ def generator(request):
 
         # collect number of portions from portions select boxes
         portions = {u'Måndag': request.POST['monday_portions'],
-                     u'Tisdag': request.POST['tuesday_portions'],
+                    u'Tisdag': request.POST['tuesday_portions'],
                     u'Onsdag': request.POST['wednesday_portions'],
                     u'Torsdag': request.POST['thursday_portions'],
                     u'Fredag': request.POST['friday_portions'],
                     u'Lördag': request.POST['saturday_portions'],
                     u'Söndag': request.POST['sunday_portions']}
+
+        fast = {u'Måndag': request.POST['monday_fast'],
+                u'Tisdag': request.POST['tuesday_fast'],
+                u'Onsdag': request.POST['wednesday_fast'],
+                u'Torsdag': request.POST['thursday_fast'],
+                u'Fredag': request.POST['friday_fast'],
+                u'Lördag': request.POST['saturday_fast'],
+                u'Söndag': request.POST['sunday_fast']}
 
         # if generate button is pushed
         if 'generate' in request.POST:
@@ -220,7 +257,7 @@ def generator(request):
             for day in responses:
                 if responses[day] != 'None':
 
-                    gen_random_food(day, responses[day], matlista)
+                    gen_random_food(day, responses[day], matlista, fast[day])
                     multiply_portions(day, portions[day], matlista)
 
         # check if button to generate new dish on monday has been pushed
@@ -232,7 +269,7 @@ def generator(request):
 
             # generate a random recepie and update matlista.
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         # check if any of the other days buttons has been pushed
@@ -242,7 +279,7 @@ def generator(request):
             matlista = request.session['matlista']
 
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         elif 'random_wednesday' in request.POST:
@@ -251,7 +288,7 @@ def generator(request):
             matlista = request.session['matlista']
 
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         elif 'random_thursday' in request.POST:
@@ -260,7 +297,7 @@ def generator(request):
             matlista = request.session['matlista']
 
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         elif 'random_friday' in request.POST:
@@ -269,7 +306,7 @@ def generator(request):
             matlista = request.session['matlista']
 
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         elif 'random_saturday' in request.POST:
@@ -278,7 +315,7 @@ def generator(request):
             matlista = request.session['matlista']
 
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         elif 'random_sunday' in request.POST:
@@ -287,7 +324,7 @@ def generator(request):
             matlista = request.session['matlista']
 
             if responses[day] != 'None':
-                gen_random_food(day,responses[day], matlista)
+                gen_random_food(day,responses[day], matlista, fast[day])
                 multiply_portions(day, portions[day], matlista)
 
         # check if any manual dish selection has been done for monday

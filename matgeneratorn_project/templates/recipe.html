@@ -11,8 +11,8 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1 class="display-4">{{ recipe.name }}</h1>
-       Kategori: {{ recipe.food_type }}
+      <h1 class="recipe-font">{{ recipe.name }}</h1>
+        <p>Kategori: {{ recipe.food_type }}</p>
 
       {{ recipe.instructions|safe }}
         <p>Alternativ: {{ recipe.alternative }}</p>
@@ -45,7 +45,7 @@
     <h3>Ingredienser:</h3>
         <strong>För {{ portions }} portioner:</strong>
         <p></p>
-          <ul class="list-group ">
+          <ul class="list-group mb-2">
           {% if ingredients %}
           {% for ingredient in ingredients %}
             <li class="list-group-item bg-list">{{ ingredient }}</li>

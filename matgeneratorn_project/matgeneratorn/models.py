@@ -27,6 +27,7 @@ class Recipe(models.Model):
     alternative = models.CharField(max_length=1024)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
     public = models.BooleanField(default=False)
+    fast = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
