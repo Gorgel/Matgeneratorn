@@ -20,5 +20,6 @@ admin.site.register(RecipeIngredient)
 admin.site.register(Ingredient)
 admin.site.register(Unit)
 admin.site.register(RecipeType, RecipeTypeAdmin)
+admin.site.register(Trello)
 
 

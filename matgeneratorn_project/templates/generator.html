@@ -411,7 +411,13 @@
 
         <div class="form-group mt-2 mb-1">
         <input class="btn bg-button" type="submit" name="generate" value="Generate" />
-        <input class="btn bg-button" type="submit" name="trello" value="Trello" />
+
+        {% if user.is_authenticated %}
+
+            <input class="btn bg-button" type="submit" name="trello" value="Trello" />
+            Skicka till {{ user.username }}s trello
+        {% endif %}
+
         </div>
         </form>
 

@@ -57,4 +57,18 @@ class RecipeIngredient(models.Model):
     def __unicode__(self):
         return unicode(self.pk)
 
+class Trello(models.Model):
+    api_key = models.CharField(max_length=128, unique=True)
+    api_secret = models.CharField(max_length=128, unique=True)
+    token = models.CharField(max_length=128, unique=True)
+    token_secret = models.CharField(max_length=128, unique=True)
+    matlista_card_url = models.CharField(max_length=128, unique=True)
+    handlingslista_card_url = models.CharField(max_length=128, unique=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
+
+    def __unicode__(self):
+        return unicode(self.user)
+
+
+
 

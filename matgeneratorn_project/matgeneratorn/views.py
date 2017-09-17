@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-from matgeneratorn.models import RecipeType, Recipe
+from matgeneratorn.models import RecipeType, Recipe, Trello
 from matgeneratorn.forms import portionsForm
 from trello import TrelloClient
 import copy
-
-# trello keys
-API_KEY = '642dd513d9c2ca3fffc425897e303742'
-API_SECRET = 'b9dc91fb518e31715cdd3645fd06c764417ab65384b9472d929a4d1efeaf93ce'
-TOKEN = '132abffaab0ef0c9550d573dddf64bf7aa8d0c0304c94877282d0ef110725b67'
 
 # helper functions
 
@@ -218,8 +213,6 @@ def generator(request):
     # check if any button has been pushed and a POST object has been created
     if request.method == 'POST':
 
-        print request.POST
-
         # collect all the food types from the select boxes
         responses = {u'Måndag': request.POST['monday'],
                      u'Tisdag': request.POST['tuesday'],
@@ -389,40 +382,39 @@ def generator(request):
             multiply_portions(day, portions[day], matlista)
 
         # check if the send to trello button has been pushed.
-        elif 'trello' in request.POST:
+        elif 'trello' in request.POST and request.user.is_authenticated():
 
             # get matlista object and ingredient object from session.
             matlista = request.session['matlista']
-            ingredients = request.session['ingredient_strings']
 
             # if there are any ingredients
-            if ingredients:
+            if request.session['ingredient_strings']:
 
-                # get global trello authentication keys
-                global API_KEY
-                global API_SECRET
-                global TOKEN
+                ingredients = request.session['ingredient_strings']
+                trello_data = Trello.objects.filter(user=request.user).first()
 
                 # create a trello client object, connect and authenticate
                 trello_client = TrelloClient(
-                    api_key=API_KEY,
-                    api_secret=API_SECRET,
-                    token=TOKEN,
-                    token_secret='your-oauth-token-secret'
+                    api_key = trello_data.api_key,
+                    api_secret = trello_data.api_secret,
+                    token = trello_data.token,
+                    token_secret = trello_data.token_secret
                 )
 
-                # get a trello board
-                trello_board = trello_client.get_board(u'58bdc41481b0566eb9890b79')
-                # get a trello card
-                card = trello_board.get_cards()[0]
+                # get matlistan card
+                matlistan_card = trello_client.get_card(trello_data.matlista_card_url)
 
-                #get checklist in that card
-                card.checklists
-                checklist = card.checklists[0]
+                # add matlista as comment
+                matlistan_card.comment(u'Måndag : ' + unicode(matlista[u'Måndag']['dish']) + '\n\n' +
+                                               u'Tisdag : ' + unicode(matlista[u'Tisdag']['dish']) + '\n\n' +
+                                               u'Onsdag : ' + unicode(matlista[u'Onsdag']['dish']) + '\n\n' +
+                                               u'Torsdag : ' + unicode(matlista[u'Torsdag']['dish']) + '\n\n' +
+                                               u'Fredag : ' + unicode(matlista[u'Fredag']['dish']) + '\n\n' +
+                                               u'Lördag : ' + unicode(matlista[u'Lördag']['dish']) + '\n\n' +
+                                               u'Söndag : ' + unicode(matlista[u'Söndag']['dish']) + '\n\n')
 
-                # make checklist object for each ingredient
-                for ingredient in ingredients:
-                    checklist.add_checklist_item(ingredient)
+                handlingslista_card = trello_client.get_card(trello_data.handlingslista_card_url)
+                handlingslista_card.add_checklist('handlingslista', ingredients)
 
         # save matlist object in session
         request.session['matlista'] = matlista
@@ -451,6 +443,7 @@ def generator(request):
         # create a list for storing final ingredients as strings
         # ready to be sent to template.
         ingredient_strings = []
+
         # loop over ingredients in ingredient list and make string in
         # format "ingredient-quantity ingredient-unit ingredient-name"
         # and save to sting list
@@ -463,7 +456,7 @@ def generator(request):
         #save ingredient string list to session
         request.session['ingredient_strings'] = ingredient_strings
 
-        # create lists of manal recepie selction
+        # create lists of manual recepie selction
         dish_type = RecipeType.objects.filter(name=responses[u'Måndag']).first()
         monday_recipes = Recipe.objects.all().filter(food_type=dish_type)
         dish_type = RecipeType.objects.filter(name=responses[u'Tisdag']).first()
